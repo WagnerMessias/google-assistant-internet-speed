@@ -19,20 +19,20 @@ app.intent('welcome', conv => {
     } 
 });
 
-app.intent('internet-connection-info', async (conv, {typeInfo}) => {
+app.intent('internet-connection-info', (conv, {typeInfo}) => {
 
-  try {
-    const data = await getInformations();
-    if (typeInfo.length == 1 && typeInfo[0] != 'basic') {
+  return  getInformations().then((data) => {
+
+    if(typeInfo.length == 1 && typeInfo[0] != 'basic'){
       conv.ask(`especifico `);
-    }
-    else {
+  
+    }else{ 
       conv.ask(`Os resultados dos testes de velocidade foram Download ${data.speeds.download} Mbps, Upload ${data.speeds.upload} Mbps com Ping de ${data.server.ping}`);
     }
-  }
-  catch (erro) {
-    console.log(erro);
-   }
+
+  },(erro) => {
+
+  });
 
 });
 
