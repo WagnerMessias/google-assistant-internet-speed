@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const {dialogflow} = require('actions-on-google');
+const {dialogflow,
+       Suggestions} = require('actions-on-google');
+
 const speedTest = require('speedtest-net');
 
 const test = speedTest({maxTime: 5000});
@@ -8,15 +10,41 @@ const app = dialogflow();
 const expressApp = express().use(bodyParser.json());
 
 app.intent('welcome', conv => {
-conv.ask(`Vamos testar a velocidade da internet?`)
+
+    conv.ask(`Bem-vindo, posso te ajudar com informações sobre sua conexão com a internet. 
+              Você deseja as informações básicas ou completa?`);
+
+    if(conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')){
+      conv.ask(new Suggestions(['Download', 'Upload','Ping']));
+    } 
 });
+
+app.intent('internet-connection-info', async (conv, {typeInfo}) => {
+
+  let data = await getInformations();
+
+  if(typeInfo.length == 1 && typeInfo[0] != 'basic'){
+    conv.ask(`especifico `);
+
+  }else{ 
+    conv.ask(`Os resultados dos testes de velocidade foram Download ${data.speeds.download} Mbps, Upload ${data.speeds.upload} Mbps com Ping de ${data.server.ping}`);
+  }
+
+
+});
+
+ function  getInformations(){
+    return new Promise(function(resolve, reject) {
+      test.on('data', data => {
+        resolve(data);
+      });
+    });
+  }
 
 expressApp.post('/fulfillment', app);
 
 expressApp.get('/', function (req, res) {
-  test.on('data', data => {
-    console.log(data);
-  });
+
     res.send('Internet Speed Guru!');
 });
 
