@@ -12,14 +12,15 @@ const expressApp = express().use(bodyParser.json());
 
 app.intent('welcome', conv => {
 
-  conv.ask(`Bem-vindo, esse é um teste de canvas`);
+  conv.ask(`Bem-vindo, esse é um teste de canvas 2`);
+  if(conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')){
 
   conv.ask(new ImmersiveResponse({
-    url: 'https://canvas-actions.herokuapp.com/',
+    url: 'https://canvas-actions.herokuapp.com',
   }));
-  if(conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')){
-    conv.ask(new Suggestions(['Download', 'Upload','Ping']));
-  } 
+} 
+    //conv.ask(new Suggestions(['Download', 'Upload','Ping']));
+ 
 });
 
 // app.intent('welcome', conv => {
