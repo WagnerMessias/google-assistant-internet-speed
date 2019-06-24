@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {dialogflow,
-       Suggestions} = require('actions-on-google');
+       Suggestions,
+       ImmersiveResponse} = require('actions-on-google');
 
 const speedTest = require('speedtest-net');
 
@@ -13,6 +14,9 @@ app.intent('welcome', conv => {
 
   conv.ask(`Bem-vindo, esse é um teste de canvas`);
 
+  conv.ask(new ImmersiveResponse({
+    url: 'https://canvas-actions.herokuapp.com/',
+  }));
   if(conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')){
     conv.ask(new Suggestions(['Download', 'Upload','Ping']));
   } 
