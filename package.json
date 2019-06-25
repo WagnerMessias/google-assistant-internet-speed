@@ -13,7 +13,7 @@
   "author": "Wagner Messias",
   "license": "ISC",
   "dependencies": {
-    "actions-on-google": "preview",
+    "actions-on-google": "^2.7.1-preview.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "speedtest-net": "^1.5.1"
